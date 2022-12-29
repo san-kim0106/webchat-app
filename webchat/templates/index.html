@@ -1,0 +1,281 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat</title>
+    <style>
+        .chat{
+            width: 40%;
+            height: 80%;
+        }
+
+        .header{
+            background-color: #67afcb;
+            height: 10%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .gc-img{
+            float: left;
+            height: 100%;
+            width: 10%;
+            padding-right: 10px;
+            padding-left: 10px;
+            border-top-left-radius: 10px;
+        }
+
+        .gc-title{
+            height: 70%;
+        }
+
+        .gc-num{
+            height: 30%;
+        }
+
+        .convo{
+            background-color: #a1c0d6;
+            height: 70%;
+            overflow-y:scroll;
+        }
+
+        .send-msg{
+            background-color: antiquewhite;
+            height: 20%;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .send{
+            background-color: yellow;
+            height: 95%;
+            width: 33%;
+            margin: 0.5%;
+            margin-top: 0.6%;
+            float: right;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border-color: yellow;
+        }
+
+        #msg{
+            height: 95%;
+            width: 65%;
+            margin: 0.5%;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-color: white;
+        }
+
+        .join-msg{
+            font-size: 13px;
+            background-color: #b4b4b4;
+            color: rgba(0, 0, 0, 0.5);
+            width: 40%;
+            height: 20px;
+            margin-left: 30%;
+            margin-right: 30%;
+            text-align: center;
+            position: relative;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        /*  BELOW is a template code for kakao chat room design  */
+        
+        .date-divider {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        .chat__message {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .chat__message--from-me {
+            justify-content: flex-end;
+        }
+        
+        .chat__message--to-me img {
+            align-self: flex-start;
+        }
+        
+        .chat__message-time {
+            font-size: 10px;
+            color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .chat__message--from-me .chat__message-body {
+            background-color: #ffe934;
+            margin-left: 5px;
+        }
+        
+        .chat__message-body {
+            padding: 10px 5px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            margin-right: 5px;
+            margin-left: 10px;
+        }
+        
+        .chat__message--to-me img {
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .chat__message .chat__message-username {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .chat__message-username{
+            margin-left: 5px;
+        }
+        
+        .chat__message-center {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gc-title{
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            var conn = new WebSocket("ws://localhost:8080");
+            var userName = "";
+
+            conn.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                switch (data.action) {
+                    case "date":
+                        log(data, "date");
+                        break;
+                    case 'join':
+                    userName = data.name;
+                        log(data, "join");
+                        break;
+                    case "sent_to_me":
+                        log(data, "sent_to_me");
+                        break;
+                    case "sent_from_me":
+                        log(data, "sent_from_me");
+                        break;
+                    case 'left':
+                        log(data, "left");
+                        break;
+                }
+            };
+
+            conn.onclose = function() {
+                log({name: userName}, "left");
+                conn = null;
+            };
+
+            function log(data, flag) {
+                var date = new Date();
+                var date_prompt = '(' + date.toISOString().split('T')[1].slice(0,6) + ') ';
+
+                switch (flag) {
+                    case "date":
+                        $(".convo").append(`
+                        <div class="date-divider">
+                            <span class="date-divider__text">${data.date}</span>
+                        </div>
+                        `)
+                        break;
+
+                    case 'join':
+                        $(".convo").append(`
+                        <div class="join-msg">${data.name} joined this chatroom</div>
+                        `)
+                        break;
+
+                    case "sent_to_me":
+                        $(".convo").append(`
+                        <div class="chat__message chat__message--to-me">
+                            <div class="chat__message-center">
+                                <h3 class="chat__message-username"> ${data.name} </h3>
+                            </div>
+                            <span class="chat__message-body"> ${data.text} </span>
+                            <span class="chat__message-time"> ${data.time} </span>
+                        </div>
+                        `)
+                        break;
+                    
+                    case "sent_from_me":
+                        $(".convo").append(`
+                        <div class="chat__message chat__message--from-me">
+                            <span class="chat__message-time"> ${data.time} </span>
+                            <span class="chat__message-body"> ${data.text} </span>
+                        </div>
+                        `)
+                        break;
+
+                    case 'left':
+                        $(".convo").append(`
+                        <div class="join-msg">${data.name} left this chatroom</div>
+                        `)
+                        break;
+                }
+                $(".convo").scrollTop = $(".convo").scrollHeight;
+                console.log($(".convo").scrollHeight);
+            }
+            
+            function disconnect() {
+                if (conn != null) {
+                    //log('Disconnecting...');
+                    conn.close();
+                    conn = null;
+                    name = 'UNKNOWN';
+                    update_ui();
+            }
+            }
+
+            $('.send').on('click', function() {
+                var msg = $('#msg').val();
+                var today = new Date();
+                var cur_time = today.getHours() + ":" + today.getMinutes();
+                log({text: msg, time: cur_time}, "sent_from_me");
+                conn.send(msg);
+                $('#msg').val('').focus();
+                return false;
+            });
+
+            $('#msg').on('keyup', function(e) {
+                if (e.keyCode === 13) {
+                    $('.send').click();
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <div class="chat">
+        <div class="header">
+            <div class="gc-title"> <br>Group chat </div>
+        </div>
+
+        <div class="convo">
+
+        </div>
+
+        <div class="send-msg">
+            <input type="text" id="msg">
+            <button class="send">Send</button>
+        </div>
+    </div>
+</body>
+</html>
