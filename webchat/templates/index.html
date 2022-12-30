@@ -180,6 +180,7 @@
             };
 
             conn.onclose = function() {
+                console.log("conn.onclose()");
                 log({name: userName}, "left");
                 conn = null;
             };
@@ -232,16 +233,6 @@
                 }
                 $(".convo").scrollTop = $(".convo").scrollHeight;
                 console.log($(".convo").scrollHeight);
-            }
-            
-            function disconnect() {
-                if (conn != null) {
-                    //log('Disconnecting...');
-                    conn.close();
-                    conn = null;
-                    name = 'UNKNOWN';
-                    update_ui();
-            }
             }
 
             $('.send').on('click', function() {
