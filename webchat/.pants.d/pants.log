@@ -1,0 +1,21 @@
+13:46:59.89 [INFO] handling request: `--pants-bin-name=./pants --pants-version=2.14.0 --version`
+13:47:00.09 [INFO] request completed: `--pants-bin-name=./pants --pants-version=2.14.0 --version`
+13:47:12.60 [INFO] handling request: `--pants-bin-name=./pants --pants-version=2.14.0`
+13:47:12.68 [INFO] request completed: `--pants-bin-name=./pants --pants-version=2.14.0`
+13:47:31.20 [INFO] handling request: `--pants-bin-name=./pants --pants-version=2.14.0`
+13:47:31.27 [INFO] request completed: `--pants-bin-name=./pants --pants-version=2.14.0`
+13:48:18.97 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"pants", ""}
+13:48:18.97 [INFO] notify invalidation: cleared 1 and dirtied 2 nodes for: {"", "pants"}
+13:48:18.97 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"", "pants.toml"}
+13:48:18.97 [INFO] notify invalidation: cleared 2 and dirtied 0 nodes for: {"", "pants.toml"}
+13:48:18.97 [ERROR] saw filesystem changes covered by invalidation globs: +{}, -{'pants.toml'}. terminating the daemon.
+13:48:19.08 [ERROR] service failure for <pants.pantsd.service.scheduler_service.SchedulerService object at 0x10bf80bb0>.
+13:48:19.08 [INFO] Waiting for ongoing runs to complete before exiting...
+13:48:19.08 [INFO] Server exiting with Ok(())
+13:48:19.08 [INFO] Waiting for Sessions to complete before exiting...
+13:48:19.09 [INFO] Waiting for shutdown of: ["scheduler_service_session", "store_gc_service_session"]
+13:48:19.09 [INFO] Shutdown completed: "scheduler_service_session"
+13:48:19.09 [INFO] Shutdown completed: "store_gc_service_session"
+13:48:19.09 [INFO] Exiting pantsd
+13:48:19.09 [WARN] File watcher exiting with: The watcher was shut down.
+13:48:19.13 [WARN] File watcher exiting with: The watcher was shut down.

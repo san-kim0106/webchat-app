@@ -156,7 +156,6 @@
         $(function() {
             var conn = new WebSocket("ws://localhost:8080");
             var userName = "";
-
             conn.onmessage = function(e) {
                 var data = JSON.parse(e.data);
                 switch (data.action) {
@@ -181,6 +180,7 @@
 
             conn.onclose = function() {
                 console.log("conn.onclose()");
+                conn.close();
                 log({name: userName}, "left");
                 conn = null;
             };
